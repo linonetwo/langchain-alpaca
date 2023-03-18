@@ -1,0 +1,55 @@
+{
+	"name": "ts-lib-starter",
+	"version": "0.0.0",
+	"type": "module",
+	"description": "boilerplate for your next TypeScript library",
+	"main": "dist/index.cjs",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"import": "./dist/index.js",
+			"default": "./dist/index.cjs"
+		}
+	},
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup",
+		"format": "dprint fmt",
+		"lint": "run-p lint:*",
+		"lint:format": "dprint check",
+		"lint:types": "tsc",
+		"lint:js": "eslint .",
+		"prepublishOnly": "pnpm build",
+		"test": "vitest"
+	},
+	"devDependencies": {
+		"@sachinraja/eslint-config": "0.2.0",
+		"@types/node": "18.11.9",
+		"dprint": "0.32.2",
+		"eslint": "8.27.0",
+		"npm-run-all": "4.1.5",
+		"tsup": "6.4.0",
+		"typescript": "4.8.4",
+		"vite": "3.2.3",
+		"vitest": "0.25.1"
+	},
+	"sideEffects": false,
+	"tsup": {
+		"entry": [
+			"src/index.ts"
+		],
+		"format": [
+			"esm",
+			"cjs"
+		],
+		"dts": {
+			"resolve": true
+		},
+		"splitting": true,
+		"clean": true
+	},
+	"packageManager": "pnpm@7.29.3"
+}

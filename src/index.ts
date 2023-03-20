@@ -92,6 +92,7 @@ export class AlpacaCppChat extends LLM implements AlpacaCppChatParameters {
   redirectingStderrOutput = os.platform() === 'win32' ? '2>&1 > $null' : '2>/dev/null'
   /**
 	 * The character output when alpaca wants user input
+	 * https://gist.github.com/dominikwilkowski/60eed2ea722183769d586c76f22098dd
 	 * >
 			data "\u001b[33m\r\n> "
 			data.startsWith('>') false

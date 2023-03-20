@@ -1,139 +1,84 @@
-# ts-lib-starter
+# LangChain-Alpaca
 
-Boilerplate for your next TypeScript library. Build with speed.
-
-## Features
-
-### [pnpm](https://pnpm.io/)
-
-A fast and efficient package manager. Packages are linked from a single, global store.
-
-### [tsup](https://tsup.egoist.sh/)
-
-A quick, easy-to-use, and zero config bundler powered by esbuild. This allows for dual publishing esm and cjs . It also produces only one type definition file for each entrypoint.
-
-### [vitest](https://vitest.dev/)
-
-A testing framework. Uses [Vite](https://vitejs.dev/) for building your code, so look through the Vite docs if you need to add plugins.
-
-### [dprint](https://dprint.dev/)
-
-A pluggable and configurable code formatting platform written in Rust. Faster alternative to Prettier.
-
-### [ESLint](https://eslint.org/) and [TypeScript ESLint](https://typescript-eslint.io/)
-
-Linter that helps you find problems in your code.
-
-### [npm-run-all](https://github.com/mysticatea/npm-run-all)
-
-Run dprint, TypeScript, and ESLint checks in parallel.
-
-### [Github Actions](https://github.com/features/actions)
-
-Run all your checks on each commit.
-
-Ensure all files are formatted before they are committed and run linters on changed files.
-
-### [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate/)
-
-Automatically opens PRs to update dependencies. Automerges patch and minor updates, but not major updates or any `typescript` updates. Also pins all `devDependencies`) to use exact versions (**no** `^` before version signifying that the latest patch version can be matched, only the version specified can be used).
-
-## Usage
-
-This is esm-first, meaning you should write esm and it is transpiled to both esm and cjs. For example, use:
+Run alpaca LLM fully locally in langchain.
 
 ```ts
-import path from 'path'
-import { fileURLToPath } from 'url'
+import path from 'node:path';
+import { AlpacaCppChat } from 'langchain-alpaca';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const alpaca = new AlpacaCppChat({ modelParameters: { model: 'locationToYourModel' } });
+const response = await alpaca.generate(['Say "hello world"']).catch((error) => console.error(error));
+
+console.log(`response`, response, JSON.stringify(response));
 ```
 
-instead of `__dirname`.
+See `example/loadLLM.mjs` for a simple example, run it with `zx example/loadLLM.mjs`
 
-### Setup
+## Parameter of AlpacaCppChat
 
-1. [Install pnpm](https://pnpm.io/installation)
+```ts
+interface AlpacaCppModelParameters {
+  /** run in interactive mode
+   * (This also means to stream the results in langchain)
+   */
+  interactive?: boolean;
+  /** run in interactive mode and poll user input at startup */
+  interactiveStart?: boolean;
+  /** in interactive mode, poll user input upon seeing PROMPT */
+  reversePrompt?: string | null;
+  /** colorise output to distinguish prompt and user input from generations */
+  color?: boolean;
+  /** RNG seed (default: -1) */
+  seed?: number;
+  /** number of threads to use during computation (default: %d) */
+  threads?: number;
+  /** prompt to start generation with (default: random) */
+  prompt?: string | null;
+  /** prompt file to start generation */
+  file?: string | null;
+  /** number of tokens to predict (default: %d) */
+  n_predict?: number;
+  /** top-k sampling (default: %d) */
+  top_k?: number;
+  /** top-p sampling (default: %.1f) */
+  top_p?: number;
+  /** last n tokens to consider for penalize (default: %d) */
+  repeat_last_n?: number;
+  /** penalize repeat sequence of tokens (default: %.1f) */
+  repeat_penalty?: number;
+  /** size of the prompt context (default: %d) */
+  ctx_size?: number;
+  /** temperature (default: %.1f) */
+  temp?: number;
+  /** batch size for prompt processing (default: %d) */
+  batch_size?: number;
+  /** model path, absolute or relative location of `ggml-alpaca-7b-q4.bin` model file (default: %s) */
+  model?: string;
+}
 
-2. [Grant Renovate access to your GitHub repos](https://github.com/marketplace/renovate)
-
-3. Copy the repo, replace `mypackage` with your repository name:
-
-```
-pnpx degit sachinraja/ts-lib-starter mypackage && cd mypackage
-```
-
-4. Search and replace all instances of `ts-lib-starter` with your package name. Remove `LICENSE` or replace it with your own.
-
-5. Install dependencies:
-
-```
-pnpm i
-```
-
-6. Lint package:
-
-```
-pnpm lint
-```
-
-7. Test package:
-
-```
-pnpm t
-```
-
-Note that there is a workflow in `.github/workflows/test.yml` that will run on each commit if you push it to GitHub.
-
-### Publishing
-
-Run `pnpm publish` to publish the package. Make sure the version is what you want to publish before publishing. Building the package (in a `prepublishOnly` script) and setting the relevant `package.json` attributes are already done. Note that [`sideEffects`](https://webpack.js.org/guides/tree-shaking/#mark-the-file-as-side-effect-free) is set to `false`, so bundlers like Webpack can tree shake the package:
-
-> A "side effect" is defined as code that performs a special behavior when imported, other than exposing one or more exports. An example of this are polyfills, which affect the global scope and usually do not provide an export.
-
-### Entry Points
-
-An entry point is a path that modules from your package can be imported from. The default entry point for this starter is `.`, which simply means that `src/index.ts` can be imported as `ts-lib-starter` (your package name).
-
-If you want to add an entrypoint, you must do the following:
-
-1. Specify the path you want to users to import your module from. For this example, I will use the file `src/constants.ts` and expose the entry point as `ts-lib-starter/constants`. Add the following in `package.json` exports:
-
-```jsonc
-"exports": {
-    ".": {
-        // ...
-    },
-    "./constants": {
-        "import": "./dist/constants.js",
-        "default": "./dist/constants.cjs"
-    }
+interface AlpacaCppChatParameters {
+  /**
+   * Working directory of dist file. Default to __dirname. If you are using esm, try set this to node_modules/langchain-alpaca/dist
+   */
+  cwd: string;
+  /**
+   * Name of alpaca.cpp binary
+   */
+  cmd: string;
+  shell: string;
 }
 ```
 
-This exposes the module to users in multiple formats. `import` is used when a user uses an esm import for the entry point. `default` is used in any other case (i.e. a cjs `require`).
+Use params like this:
 
-2. Add the file to the `tsup` build in the `package.json` config:
-
-```diff
-{
-  "tsup": {
-    "entryPoints": [
-      "src/index.ts",
-+     "src/constants.ts"
-    ]
-    "format": [
-      "esm",
-      "cjs"
-    ],
-    "dts": {
-      "resolve": true
-    },
-    "splitting": true
-  }
-}
+```ts
+new AlpacaCppChat({ fields?: BaseLLMParams & Partial<AlpacaCppChatParameters> & { modelParameters?: Partial<AlpacaCppModelParameters> })
 ```
 
-Note the options here. `format` specifies for the package to be bundled in both esm and cjs, which allows for a dual publish. `dts.resolve` is used to bundle types for `devDependencies`. For example, if you use a TypeScript utilities package, such as [`ts-essentials`](https://github.com/krzkaczor/ts-essentials), the types will be bundled (in the `.d.ts` files) to avoid a dependency on `ts-essentials`. `splitting` enables an experimental feature that allows for creating chunks with cjs. This helps to avoid duplicating code with a package with multiple entry points.
+Where `BaseLLMParams` is from `langchain` core package.
 
-The `entryPoints` (`src/index.ts` and `src/constants.ts`), specify the files that are our entry points, so when you add an entry point, it must also be added to the `build` config like before.
+## Development
+
+During dev, you can put your model (or `ln -s` it) in the `model/ggml-alpaca-7b-q4.bin`.
+
+And run the `zx example/loadLLM.mjs` to test it.

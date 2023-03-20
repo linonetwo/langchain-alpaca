@@ -1,8 +1,8 @@
 {
-  "name": "ts-lib-starter",
+  "name": "langchain-alpaca",
   "version": "0.0.0",
   "type": "module",
-  "description": "boilerplate for your next TypeScript library",
+  "description": "Run alpaca LLM fully locally in langchain",
   "main": "dist/index.cjs",
   "exports": {
     "./package.json": "./package.json",
@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && cp -r ./binary ./dist",
     "test": "vitest --threads=false",
     "runExample": "zx example/loadLLM.mjs",
     "tryModel": "./dist/chat -m ./model/ggml-alpaca-7b-q4.bin -p \"Tell me a joke. End with Joke EOF.\"",
@@ -26,7 +26,7 @@
     "lint:types": "tsc",
     "lint:js": "eslint .",
     "downloadBinary": "zx scripts/downloadBinary.mjs",
-    "prepublishOnly": "pnpm build && pnpm downloadBinary && cp -r ./binary ./dist"
+    "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },
   "devDependencies": {
     "@sachinraja/eslint-config": "0.2.0",

@@ -56,7 +56,13 @@ interface BaseLLMParams extends BaseLanguageModelParams {
 }
 
 export interface AlpacaCppChatParameters {
+  /**
+   * Working directory of dist file. Default to __dirname. If you are using esm, try set this to node_modules/langchain-alpaca/dist
+   */
   cwd: string
+  /**
+   * Name of alpaca.cpp binary
+   */
   cmd: string
   shell: string
 }
@@ -72,16 +78,16 @@ export class AlpacaCppChat extends LLM implements AlpacaCppChatParameters {
     model: '../model/ggml-alpaca-7b-q4.bin',
     // More CPU makes it slow, don't know why.
     // https://github.com/antimatter15/alpaca.cpp/issues/61#issuecomment-1476518558
-    threads: Math.min(8, os.cpus().length),
+    threads: Math.min(4, os.cpus().length),
   }
 
   /**
-   * Working directory to execute alpaca.cpp binary
+   * Working directory of dist file. Default to __dirname. If you are using esm, try set this to node_modules/langchain-alpaca/dist
    */
   // eslint-disable-next-line unicorn/prefer-module
   cwd = __dirname
   /**
-   * Name of binary
+   * Name of alpaca.cpp binary
    */
   cmd = os.platform() === 'win32' ? './binary/chat.exe' : (os.platform() === 'darwin' ? './binary/chat_mac' : './binary/chat')
   shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash'
@@ -119,11 +125,10 @@ export class AlpacaCppChat extends LLM implements AlpacaCppChatParameters {
   readSecondInputControlCharacter = this.outputStartControlCharacter + '\r\n>'
 
   constructor(
-    fields?: BaseLLMParams & Partial<AlpacaCppChatParameters>,
-    modelParameters?: Partial<AlpacaCppModelParameters>,
+    fields?: BaseLLMParams & Partial<AlpacaCppChatParameters> & { modelParameters?: Partial<AlpacaCppModelParameters> },
   ) {
     super(fields ?? {})
-    this.modelParams = { ...this.modelParams, ...modelParameters }
+    this.modelParams = { ...this.modelParams, ...fields?.modelParameters }
 
     this.cwd = fields?.cwd ?? this.cwd
     this.cmd = fields?.cmd ?? this.cmd

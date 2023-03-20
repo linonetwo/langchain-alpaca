@@ -14,9 +14,12 @@ const alpaca = new AlpacaCppChat({ modelParameters: { model: 'locationToYourMode
 const response = await alpaca.generate(['Say "hello world"']).catch((error) => console.error(error))
 
 console.log(`response`, response, JSON.stringify(response))
+// response { generations: [ [ [Object] ] ] } {"generations":[[{"text":"Hello World!"}]]}
 ```
 
 See `example/loadLLM.mjs` for a simple example, run it with `zx example/loadLLM.mjs`
+
+Read [doc of LangChainJS](https://hwchase17.github.io/langchainjs/docs/overview/) to learn how to build a fully localized free AI workflow for you.
 
 ## Parameter of AlpacaCppChat
 

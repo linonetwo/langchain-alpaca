@@ -23,6 +23,7 @@
 		"lint:types": "tsc",
 		"lint:js": "eslint .",
 		"prepublishOnly": "pnpm build",
+		"buildSubmodule": "git submodule update --init --recursive",
 		"test": "vitest"
 	},
 	"devDependencies": {

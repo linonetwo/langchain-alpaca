@@ -17,20 +17,22 @@
 	],
 	"scripts": {
 		"build": "tsup",
+		"buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
+		"test": "vitest",
 		"format": "dprint fmt",
 		"lint": "run-p lint:*",
 		"lint:format": "dprint check",
 		"lint:types": "tsc",
 		"lint:js": "eslint .",
-		"prepublishOnly": "pnpm build",
-		"buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
-		"test": "vitest"
+		"prepublishOnly": "pnpm build"
 	},
 	"devDependencies": {
 		"@sachinraja/eslint-config": "0.2.0",
 		"@types/node": "18.11.9",
 		"dprint": "0.32.2",
 		"eslint": "8.27.0",
+		"langchain": "^0.0.36",
+		"node-gyp": "^9.3.1",
 		"npm-run-all": "4.1.5",
 		"tsup": "6.4.0",
 		"typescript": "4.8.4",
@@ -56,5 +58,8 @@
 	"packageManager": "pnpm@7.29.3",
 	"peerDependencies": {
 		"langchain": "^0.0.36"
+	},
+	"dependencies": {
+		"node-pty": "^0.10.1"
 	}
 }

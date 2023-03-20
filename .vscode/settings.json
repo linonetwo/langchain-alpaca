@@ -4,5 +4,8 @@
 	"typescript.preferences.importModuleSpecifierEnding": "js",
 	"[typescript]": {
 		"editor.defaultFormatter": "dprint.dprint"
-	}
+	},
+	"cSpell.words": [
+		"langchain"
+	]
 }

@@ -1,11 +1,12 @@
 {
-	"editor.defaultFormatter": "dprint.dprint",
-	"dprint.path": "node_modules/dprint/dprint",
-	"typescript.preferences.importModuleSpecifierEnding": "js",
-	"[typescript]": {
-		"editor.defaultFormatter": "dprint.dprint"
-	},
-	"cSpell.words": [
-		"langchain"
-	]
+  "editor.defaultFormatter": "dprint.dprint",
+  "dprint.path": "node_modules/dprint/dprint",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "[typescript]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "cSpell.words": ["langchain"],
+  "[javascript]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  }
 }

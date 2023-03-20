@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && npm run buildSubmodule",
+    "build": "tsup",
     "test": "vitest --threads=false",
     "runExample": "zx example/loadLLM.mjs",
     "tryModel": "./dist/chat -m ./model/ggml-alpaca-7b-q4.bin -p \"Tell me a joke. End with Joke EOF.\"",
@@ -25,8 +25,8 @@
     "lint:format": "dprint check",
     "lint:types": "tsc",
     "lint:js": "eslint .",
-    "buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
-    "prepublishOnly": "pnpm build"
+    "downloadBinary": "zx scripts/downloadBinary.mjs",
+    "prepublishOnly": "pnpm build && pnpm downloadBinary && cp -r ./binary ./dist"
   },
   "devDependencies": {
     "@sachinraja/eslint-config": "0.2.0",

@@ -83,7 +83,7 @@ export class AlpacaCppChat extends LLM implements AlpacaCppChatParameters {
   /**
    * Name of binary
    */
-  cmd = os.platform() === 'win32' ? './chat.exe' : './chat'
+  cmd = os.platform() === 'win32' ? './binary/chat.exe' : (os.platform() === 'darwin' ? './binary/chat_mac' : './binary/chat')
   shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash'
   /**
    * Ignore diagnostic outputs

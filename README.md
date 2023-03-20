@@ -2,6 +2,10 @@
 
 Run alpaca LLM fully locally in langchain.
 
+```shell
+pnpm i langchain-alpaca
+```
+
 ```ts
 import path from 'node:path';
 import { AlpacaCppChat } from 'langchain-alpaca';

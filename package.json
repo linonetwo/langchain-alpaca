@@ -16,14 +16,15 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
-		"buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
-		"test": "vitest",
+		"build": "tsup && npm run buildSubmodule",
+		"test": "vitest --threads=false",
+		"tryModel": "./dist/chat -m ./model/ggml-alpaca-7b-q4.bin -p \"Tell me a joke. End with Joke EOF.\"",
 		"format": "dprint fmt",
 		"lint": "run-p lint:*",
 		"lint:format": "dprint check",
 		"lint:types": "tsc",
 		"lint:js": "eslint .",
+		"buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
 		"prepublishOnly": "pnpm build"
 	},
 	"devDependencies": {

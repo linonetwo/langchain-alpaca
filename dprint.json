@@ -1,6 +1,8 @@
 {
 	"incremental": true,
-	"useTabs": true,
+	"useTabs": false,
+	"indentWidth": 2,
+	"lineWidth": 140,
 	"typescript": {
 		"quoteStyle": "preferSingle",
 		"semiColons": "asi"

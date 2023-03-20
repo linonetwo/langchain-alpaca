@@ -1,16 +1,17 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"module": "esnext",
-		"moduleResolution": "node",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"allowSyntheticDefaultImports": true,
-		"forceConsistentCasingInFileNames": true,
-		"noEmit": true,
-		"isolatedModules": true
-	},
-	"include": ["src", "test"],
-	"exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "isolatedModules": true
+  },
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "dist"]
 }

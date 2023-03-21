@@ -1,7 +1,10 @@
+import debugLib from 'debug'
 import pty from 'node-pty'
 import os from 'node:os'
 import type { Observer } from 'rxjs'
 import { readInputControlCharacter, readSecondInputControlCharacter, redirectingStderrOutput } from './constants.js'
+
+const debug = debugLib('langchain-alpaca:session')
 
 export interface AlpacaCppChatParameters {
   /**
@@ -48,6 +51,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
   queue: Array<QueueItem> = []
 
   constructor(invocationParameters: string, binaryParameter?: Partial<AlpacaCppChatParameters>) {
+    debug(`constructor(${invocationParameters}, ${JSON.stringify(binaryParameter)})`)
     this.cwd = binaryParameter?.cwd ?? this.cwd
     this.cmd = binaryParameter?.cmd ?? this.cmd
     this.shell = binaryParameter?.shell ?? this.shell
@@ -55,14 +59,17 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
     this.invocationParams = invocationParameters
 
     try {
+      debug('pty.spawn')
       this.ptyProcess = pty.spawn(this.shell, [], {
         cwd: this.cwd,
       })
+      debug('pty.spawn √')
     } catch (error) {
       console.error('caught error when init ptyProcess in AlpacaCppSession', error)
       throw error
     }
     this.ptyProcess.onExit((result) => {
+      debug(`pty exit ${JSON.stringify(result)}`)
       if (result.exitCode === 0) {
         // successful
       } else {
@@ -76,8 +83,10 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
    * Start alpaca.cpp in the pty session.
    */
   initialization() {
-    const commandToExecute = `${this.cmd} ${this.invocationParams} ${redirectingStderrOutput}`
-    console.log(`${this.shell} exec: ${commandToExecute} in ${this.cwd}`)
+    const commandToExecute = `${this.cmd} ${this.invocationParams} ${
+      process.env.DEBUG?.includes('langchain-alpaca') ? '' : redirectingStderrOutput
+    }`
+    debug(`initialization ${this.shell} exec: ${commandToExecute} in ${this.cwd}`)
     this.setListenerForQueue()
     this.ptyProcess.write(`${commandToExecute} \r`)
   }
@@ -86,10 +95,15 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
    * A listener on the shell, that will pass data to "current item in the queue"'s callback
    */
   setListenerForQueue() {
+    debug('setListenerForQueue')
     this.ptyProcess.onData((data) => {
+      debug(`onData ${data}`)
       // this callback will be called line by line.
       // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
+      debug(`this.doneInitialization ${this.doneInitialization}`)
+      debug(`data.includes(readInputControlCharacter) ${data.includes(readInputControlCharacter)}`)
       if (this.doneInitialization) {
+        debug(`data.includes(readSecondInputControlCharacter) ${data.includes(readSecondInputControlCharacter)}`)
         if (data.includes(readSecondInputControlCharacter)) {
           // for the second time encounter `>` (after return result)
           // this means last item in the queue is finished the execution
@@ -97,11 +111,13 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           return
         }
         const command = this.queue[0]
+        debug(`this.queue[0] command ${command === undefined ? 'undefined' : JSON.stringify(command)}`)
         if (command === undefined) return
         if (!command.doneInput) {
           this.processQueue()
           return
         }
+        debug(`data.startsWith(command.prompt) ${data.startsWith(command.prompt)}`)
         if (data.startsWith(command.prompt)) {
           // shell will echo the input, we have to wait after the echo to receive the real input.
           command.doneInput = true
@@ -121,6 +137,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
   }
 
   processQueue() {
+    debug('processQueue')
     // wait for init, after init, callback in `this.setListenerForQueue` will call `processQueue`
     if (!this.doneInitialization) return
     if (this.queue.length === 0) {
@@ -135,6 +152,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
   }
 
   finishItemInQueue() {
+    debug('finishItemInQueue')
     this.queue.shift()
   }
 

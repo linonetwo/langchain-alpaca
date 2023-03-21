@@ -1,10 +1,13 @@
 /* eslint-disable unicorn/no-array-reduce */
+import debugLib from 'debug'
 import { BaseLanguageModelParams } from 'langchain/dist/base_language/index.js'
 import { BaseCache } from 'langchain/dist/cache.js'
 import { LLM } from 'langchain/llms'
 import os from 'node:os'
 import { AlpacaCppChatParameters, AlpacaCppSession } from './session.js'
 import { escapeDoubleQuotes, escapeNewLine } from './utils.js'
+
+const debug = debugLib('langchain-alpaca:llm')
 
 /**
  * Usage of `./chat` binary
@@ -80,11 +83,14 @@ export class AlpacaCppChat extends LLM {
   constructor(
     configs?: BaseLLMParams & Partial<AlpacaCppChatParameters> & Partial<AlpacaCppChatLLMParameters>,
   ) {
+    debug('constructor super')
     super(configs ?? {})
+    debug('constructor')
     this.modelParams = { ...this.modelParams, ...configs?.modelParameters }
     // create a session to local alpaca.cpp binary using shell
     // invocationParams can have `prompt` field, but that is only for first execution, so we are not using it. Instead, we passing prompt using `this.session.execute`
     this.session = new AlpacaCppSession(this.invocationParams(), configs)
+    debug('session = new AlpacaCppSession')
     this.streaming = configs?.streaming ?? this.streaming
   }
 
@@ -126,6 +132,7 @@ export class AlpacaCppChat extends LLM {
    * ```
    */
   async _call(prompt: string, _stop?: string[]): Promise<string> {
+    debug(`_call(${prompt})`)
     if (this.streaming) {
       return ''
     }

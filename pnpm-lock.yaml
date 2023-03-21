@@ -2,7 +2,9 @@ lockfileVersion: 5.4
 
 specifiers:
   '@sachinraja/eslint-config': 0.2.0
+  '@types/debug': ^4.1.7
   '@types/node': 18.15.5
+  debug: ^4.3.4
   dprint: 0.35.3
   eslint: 8.36.0
   langchain: ^0.0.37
@@ -17,14 +19,16 @@ specifiers:
   zx: ^7.2.1
 
 dependencies:
+  debug: 4.3.4
   node-pty: 0.10.1
 
 devDependencies:
   '@sachinraja/eslint-config': 0.2.0_j4766f7ecgqbon3u7zlxn5zszu
+  '@types/debug': 4.1.7
   '@types/node': 18.15.5
   dprint: 0.35.3
   eslint: 8.36.0
-  langchain: 0.0.37
+  langchain: 0.0.37_debug@4.3.4
   node-gyp: 9.3.1
   npm-run-all: 4.1.5
   rxjs: 7.8.0
@@ -388,6 +392,12 @@ packages:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
     dev: true
 
+  /@types/debug/4.1.7:
+    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
+    dependencies:
+      '@types/ms': 0.7.31
+    dev: true
+
   /@types/fs-extra/11.0.1:
     resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
     dependencies:
@@ -407,6 +417,10 @@ packages:
 
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
+    dev: true
+
+  /@types/ms/0.7.31:
+    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
   /@types/node/18.15.5:
@@ -728,10 +742,10 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: true
 
-  /axios/0.26.1:
+  /axios/0.26.1_debug@4.3.4:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.2_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: true
@@ -1000,7 +1014,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /deep-eql/4.1.3:
     resolution: {integrity: sha512-WaEtAOpRA1MQ0eohqZjpGD8zdI0Ovsm8mmFhaDN8dvDZzyoUMcYDnf5Y6iu7HTXxf8JDS23qWa4a+hKCDyOPzw==}
@@ -1473,7 +1486,7 @@ packages:
     resolution: {integrity: sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==}
     dev: true
 
-  /follow-redirects/1.15.2:
+  /follow-redirects/1.15.2_debug@4.3.4:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -1481,6 +1494,8 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dependencies:
+      debug: 4.3.4
     dev: true
 
   /form-data/4.0.0:
@@ -2016,7 +2031,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /langchain/0.0.37:
+  /langchain/0.0.37_debug@4.3.4:
     resolution: {integrity: sha512-Qoa1YhkRnDaTPhvHi5zOR3iCtI9LZAV6mXm3vgRvYC7YDwBhMAkHUqa5yEhaLCbuGlCHI4imtxIvgCZy9ItLxQ==}
     peerDependencies:
       '@dqbd/tiktoken': ^1.0.2
@@ -2073,7 +2088,7 @@ packages:
       gpt3-tokenizer: 1.1.5
       jsonpointer: 5.0.1
       object-hash: 3.0.0
-      openai: 3.2.1
+      openai: 3.2.1_debug@4.3.4
       p-queue: 7.3.4
       uuid: 9.0.0
       yaml: 2.2.1
@@ -2335,7 +2350,6 @@ packages:
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
-    dev: true
 
   /mz/2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
@@ -2510,10 +2524,10 @@ packages:
       mimic-fn: 2.1.0
     dev: true
 
-  /openai/3.2.1:
+  /openai/3.2.1_debug@4.3.4:
     resolution: {integrity: sha512-762C9BNlJPbjjlWZi4WYK9iM2tAVAv0uUp1UmI34vb0CN5T2mjB/qM6RYBmNKMh/dN9fC+bxqPwWJZUTWW052A==}
     dependencies:
-      axios: 0.26.1
+      axios: 0.26.1_debug@4.3.4
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug

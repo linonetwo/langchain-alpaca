@@ -15,6 +15,7 @@ const response = await alpaca.generate(['Say "hello world"']).catch((error) => c
 
 console.log(`response`, response, JSON.stringify(response))
 // response { generations: [ [ [Object] ] ] } {"generations":[[{"text":"Hello World!"}]]}
+alpaca.closeSession() // close the node-tty session to free the memory used by alpaca.cpp. You can query alpaca as much as you want before closing it.
 ```
 
 See `example/loadLLM.mjs` for a simple example, run it with `zx example/loadLLM.mjs`

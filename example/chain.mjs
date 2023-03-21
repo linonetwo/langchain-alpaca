@@ -3,6 +3,7 @@
  * @url https://hwchase17.github.io/langchainjs/docs/modules/chains/llm_chain
  */
 /* eslint-disable no-undef */
+import { CallbackManager } from 'langchain/callbacks'
 import { LLMChain } from 'langchain/chains'
 import { PromptTemplate } from 'langchain/prompts'
 import path from 'node:path'
@@ -17,6 +18,11 @@ const prompt = new PromptTemplate({
 const alpaca = new AlpacaCppChat({
   cwd: path.join(__dirname, '../dist'),
   modelParameters: { model: path.join(__dirname, '../model/ggml-alpaca-7b-q4.bin') },
+  // stream output to console to view it on realtime
+  streaming: true,
+  callbackManager: CallbackManager.fromHandlers({
+    handleLLMNewToken: (token) => console.log(token),
+  }),
 })
 
 const chain = new LLMChain({ llm: alpaca, prompt: prompt })

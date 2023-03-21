@@ -156,14 +156,19 @@ export class AlpacaCppChat extends LLM {
     if (this.session === undefined) {
       this.newSession()
     }
-    if (this.streaming) {
-      return ''
-    }
+
     return new Promise((resolve, reject) => {
       let completion = ''
       this.session?.execute(prompt, {
         next: ({ token }) => {
+          if (!token) return
           completion += token
+          if (this.streaming) {
+            void this.callbackManager.handleLLMNewToken(
+              token,
+              true,
+            )
+          }
         },
         complete: () => resolve(completion),
         error: (error) => reject(error),

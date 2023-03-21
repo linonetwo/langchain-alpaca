@@ -76,8 +76,9 @@ export class AlpacaCppChat extends LLM {
     // https://github.com/antimatter15/alpaca.cpp/issues/61#issuecomment-1476518558
     threads: Math.min(4, os.cpus().length),
   }
+  binaryParameter?: Partial<AlpacaCppChatParameters>
 
-  session: AlpacaCppSession
+  session?: AlpacaCppSession
   streaming = false
 
   constructor(
@@ -87,10 +88,8 @@ export class AlpacaCppChat extends LLM {
     super(configs ?? {})
     debug('constructor')
     this.modelParams = { ...this.modelParams, ...configs?.modelParameters }
-    // create a session to local alpaca.cpp binary using shell
-    // invocationParams can have `prompt` field, but that is only for first execution, so we are not using it. Instead, we passing prompt using `this.session.execute`
-    this.session = new AlpacaCppSession(this.invocationParams(), configs)
-    debug('session = new AlpacaCppSession')
+    this.binaryParameter = configs
+    this.newSession()
     this.streaming = configs?.streaming ?? this.streaming
   }
 
@@ -116,6 +115,27 @@ export class AlpacaCppChat extends LLM {
     }, '').trim()
   }
 
+  newSession() {
+    debug('newSession')
+    // release previous session if existed
+    this.closeSession()
+    // create a session to local alpaca.cpp binary using shell
+    // invocationParams can have `prompt` field, but that is only for first execution, so we are not using it. Instead, we passing prompt using `this.session.execute`
+    this.session = new AlpacaCppSession(this.invocationParams(), this.binaryParameter)
+  }
+
+  /**
+   * Close the session (Release LLM process) manually.
+   *
+   * You can't call this LLM when session is closed.
+   */
+  closeSession() {
+    if (this.session !== undefined) {
+      debug('closeSession')
+      this.session.destroy()
+    }
+  }
+
   /**
    * Call out to local alpaca.cpp with k unique prompts
    *
@@ -133,14 +153,17 @@ export class AlpacaCppChat extends LLM {
    */
   async _call(prompt: string, _stop?: string[]): Promise<string> {
     debug(`_call(${prompt})`)
+    if (this.session === undefined) {
+      this.newSession()
+    }
     if (this.streaming) {
       return ''
     }
     return new Promise((resolve, reject) => {
       let completion = ''
-      this.session.execute(prompt, {
-        next: (data: string) => {
-          completion += data
+      this.session?.execute(prompt, {
+        next: ({ token }) => {
+          completion += token
         },
         complete: () => resolve(completion),
         error: (error) => reject(error),

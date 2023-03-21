@@ -8,3 +8,4 @@ const alpaca = new AlpacaCppChat({
 const response = await alpaca.generate(['Say "hello world"']).catch((error) => console.error(error))
 
 console.log(`response`, response, JSON.stringify(response))
+alpaca.closeSession()

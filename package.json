@@ -28,18 +28,25 @@
     "downloadBinary": "zx scripts/downloadBinary.mjs",
     "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },
+  "peerDependencies": {
+    "langchain": "^0.0.37"
+  },
+  "dependencies": {
+    "node-pty": "^0.10.1"
+  },
   "devDependencies": {
     "@sachinraja/eslint-config": "0.2.0",
-    "@types/node": "18.11.9",
-    "dprint": "0.32.2",
-    "eslint": "8.27.0",
-    "langchain": "^0.0.36",
+    "@types/node": "18.15.5",
+    "dprint": "0.35.3",
+    "eslint": "8.36.0",
+    "langchain": "^0.0.37",
     "node-gyp": "^9.3.1",
     "npm-run-all": "4.1.5",
-    "tsup": "6.4.0",
-    "typescript": "4.8.4",
-    "vite": "3.2.3",
-    "vitest": "0.25.1",
+    "rxjs": "^7.8.0",
+    "tsup": "6.7.0",
+    "typescript": "5.0.2",
+    "vite": "4.2.1",
+    "vitest": "0.29.7",
     "zx": "^7.2.1"
   },
   "sideEffects": false,
@@ -57,11 +64,5 @@
     "splitting": true,
     "clean": true
   },
-  "packageManager": "pnpm@7.29.3",
-  "peerDependencies": {
-    "langchain": "^0.0.36"
-  },
-  "dependencies": {
-    "node-pty": "^0.10.1"
-  }
+  "packageManager": "pnpm@7.29.3"
 }

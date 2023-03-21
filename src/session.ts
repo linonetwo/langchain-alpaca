@@ -1,5 +1,6 @@
 import pty from 'node-pty'
 import os from 'node:os'
+import type { Observer } from 'rxjs'
 import { readInputControlCharacter, readSecondInputControlCharacter, redirectingStderrOutput } from './constants.js'
 
 export interface AlpacaCppChatParameters {
@@ -14,9 +15,8 @@ export interface AlpacaCppChatParameters {
   shell: string
 }
 
-export interface QueueItem {
+export interface QueueItem extends Observer<string> {
   prompt: string
-  callback: (data: string) => void
   doneInput: boolean
 }
 
@@ -109,7 +109,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
         }
         if (command.doneInput) {
           // finally, we are getting the real output of LLM
-          command.callback(data)
+          command.next(data)
           return
         }
       } else if (data.includes(readInputControlCharacter)) {
@@ -144,12 +144,12 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
    * Will insert current prompt into a queue, or execute immediately if queue is empty.
    * @param prompt Text input for the Chat LLM
    */
-  execute(prompt: string, callback: (data: string) => void) {
+  execute(prompt: string, observer: Observer<string>) {
     const noWaitingTask = this.queue.length === 0
     this.queue.push({
       prompt,
       doneInput: false,
-      callback,
+      ...observer,
     })
     if (noWaitingTask) {
       this.processQueue()

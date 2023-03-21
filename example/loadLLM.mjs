@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import path from 'node:path'
 import { AlpacaCppChat } from '../dist/index.js'
 

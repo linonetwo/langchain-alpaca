@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { resolve } from 'node:path'
 import { pipeline } from 'node:stream'
 

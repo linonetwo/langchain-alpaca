@@ -40,10 +40,10 @@ export interface QueueItem extends Observer<{ token: string; item: QueueItem }> 
  */
 export class AlpacaCppSession implements AlpacaCppChatParameters {
   /**
-   * Working directory of dist file. Default to __dirname. If you are using esm, try set this to node_modules/langchain-alpaca/dist
+   * Working directory of dist file. Default to `.` . If you are using esm, try set this to node_modules/langchain-alpaca/dist
    */
   // eslint-disable-next-line unicorn/prefer-module
-  cwd = __dirname
+  cwd = '.'
   /**
    * Name of alpaca.cpp binary
    */

@@ -1,6 +1,6 @@
 {
   "name": "langchain-alpaca",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "type": "module",
   "description": "Run alpaca LLM fully locally in langchain",
   "main": "dist/index.cjs",

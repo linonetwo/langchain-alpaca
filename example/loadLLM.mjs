@@ -4,7 +4,6 @@ import { AlpacaCppChat, getPhysicalCore } from '../dist/index.js'
 
 console.time('LoadAlpaca')
 const alpaca = new AlpacaCppChat({
-  cwd: path.join(__dirname, '../dist'),
   // example: save one core for electron renderer
   modelParameters: { model: path.join(__dirname, '../model/ggml-alpaca-7b-q4.bin'), threads: getPhysicalCore() - 1 },
 })

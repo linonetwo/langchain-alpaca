@@ -66,8 +66,6 @@ export interface AlpacaCppChatLLMParameters {
   streaming: boolean
 }
 
-// DEBUG: console getPhysicalCore()
-console.log(`getPhysicalCore()`, getPhysicalCore());
 /**
  * Wrapper around binary executable that loads alpaca model
  *

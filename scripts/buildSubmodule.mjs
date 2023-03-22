@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const binaryFolder = path.join(__dirname, '..', 'binary')
 
 cd('../alpaca.cpp')

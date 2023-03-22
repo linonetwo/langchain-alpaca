@@ -2,12 +2,7 @@ import debugLib from 'debug'
 import pty from 'node-pty'
 import os from 'node:os'
 import type { Observer } from 'rxjs'
-import {
-  defaultBinaryPath,
-  readInputControlCharacter,
-  readSecondInputControlCharacters,
-  redirectingStderrOutput,
-} from './constants.js'
+import { defaultBinaryPath, readInputControlCharacter, readSecondInputControlCharacters, redirectingStderrOutput } from './constants.js'
 
 const debug = debugLib('langchain-alpaca:session')
 const debugData = debugLib('langchain-alpaca:data')
@@ -119,15 +114,15 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
             doneInit: this.doneInitialization,
             control1: data.includes(readInputControlCharacter),
             control2: readSecondInputControlCharacters.every(char => data.includes(char)),
-            prompt: data.includes(item?.prompt),
+            prompt: data.replace(/\s/g, '').includes(item?.prompt?.replace(/\s/g, '')),
             'queue[0]': { ...item, prompt: '' },
           })
         }`,
-        )
-        debugData(JSON.stringify(data))
-        // this callback will be called line by line.
-        // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
-        if (this.doneInitialization) {
+      )
+      debugData(JSON.stringify(data))
+      // this callback will be called line by line.
+      // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
+      if (this.doneInitialization) {
         if (item === undefined) return
         if (item.outputStarted && readSecondInputControlCharacters.every(char => data.includes(char))) {
           // for the second time encounter `>` (after return result)
@@ -136,7 +131,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           item.complete()
           return
         }
-        if (!item.doneEcho && data.includes(item.prompt)) {
+        if (!item.doneEcho && data.replace(/\s/g, '').includes(item.prompt.replace(/\s/g, ''))) {
           // shell will echo the input, we have to wait after the echo to receive the real input.
           item.doneEcho = true
           return
@@ -197,7 +192,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
     if (command === undefined) return
     if (command.doneInput) return
     // pass item's prompt to LLM
-    debug(`processQueue() write prompt\n${command.prompt}`)
+    debug(`processQueue() write prompt\n${JSON.stringify(command.prompt)}`)
     command.doneInput = true
     this.ptyProcess.write(`${command.prompt} \r`)
   }

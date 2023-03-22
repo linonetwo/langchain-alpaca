@@ -108,6 +108,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
   setListenerForQueue() {
     debug('setListenerForQueue')
 
+    // refactor following code to state machine if gets too complicated
     this.ptyProcess.onData((data) => {
       const item = this.queue[0]
       // prevent JSON.stringify execution if not in debug mode
@@ -121,18 +122,18 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
             'queue[0]': item,
           })
         }\n${JSON.stringify(data)}`,
-      )
-      // this callback will be called line by line.
-      // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
-      if (this.doneInitialization) {
-        if (data.includes(outputStartControlCharacter) && data.includes(readSecondInputControlCharacter)) {
+        )
+        // this callback will be called line by line.
+        // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
+        if (this.doneInitialization) {
+        if (item === undefined) return
+        if (item.outputStarted && data.includes(outputStartControlCharacter) && data.includes(readSecondInputControlCharacter)) {
           // for the second time encounter `>` (after return result)
           // this means last item in the queue is finished the execution
           this.finishItemInQueue()
           item.complete()
           return
         }
-        if (item === undefined) return
         if (!item.doneEcho && data.includes(item.prompt)) {
           // shell will echo the input, we have to wait after the echo to receive the real input.
           item.doneEcho = true
@@ -142,18 +143,19 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           this.processQueue()
           return
         }
-        if (item.doneInput) {
+        if (item.doneInput && item.doneEcho) {
           // finally, we are getting the real output of LLM
 
           // eslint-disable-next-line no-control-regex
           let token = data.replace(/[\u0000-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
-          if (token) {
-            if (!item.outputStarted) {
-              // first token contains controlCharacter like `"\u001b[0mHello World!"`, need to remove it.
-              token = token.replace(/\[[\d;]*[A-Za-z]/g, '')
-            }
+          if (!item.outputStarted) {
+            // first token contains controlCharacter like `"\u001b[0mHello World!"`, need to remove it.
+            token = token.replace(/\[[\d;]*[A-Za-z]/g, '')
             // if not empty after strip control characters, inform client that outputStarted is true
-            item.outputStarted = true
+            token = token.replace(/\n/g, '')
+            if (token) {
+              item.outputStarted = true
+            }
           }
           // give item's callback the latest output token, and current state in the queue item
           item.next({ token, item })
@@ -170,6 +172,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
     this.ptyProcess.onExit((result) => {
       debug(`pty exit ${JSON.stringify(result)}`)
       if (result.exitCode === 0) {
+        debug(`pty exit successful`)
         // successful
       } else {
         const command = this.queue[0]

@@ -25,8 +25,7 @@
   ],
   "scripts": {
     "build": "tsup && cp -r ./binary ./dist",
-    "test": "vitest --threads=false",
-    "runExample": "DEBUG=langchain-alpaca:* zx example/loadLLM.mjs",
+    "runExample": "cross-env DEBUG=langchain-alpaca:* zx example/loadLLM.mjs",
     "updateSubmodule": "git submodule update --init --recursive",
     "buildSubmodule": "cross-env npm_config_yes=true npx zx scripts/buildSubmodule.mjs && cp -r ./binary ./dist",
     "format": "dprint fmt",
@@ -34,6 +33,7 @@
     "lint:format": "dprint check",
     "lint:types": "tsc",
     "lint:js": "eslint .",
+    "test": "vitest --threads=false",
     "downloadBinary": "zx scripts/downloadBinary.mjs",
     "postinstall": "npm run buildSubmodule || exit 0",
     "prepublishOnly": "pnpm downloadBinary && pnpm build"

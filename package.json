@@ -1,6 +1,6 @@
 {
   "name": "langchain-alpaca",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "description": "Run alpaca LLM fully locally in langchain",
   "main": "dist/index.cjs",
@@ -27,7 +27,7 @@
     "lint:js": "eslint .",
     "buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs && cp -r ./binary ./dist",
     "downloadBinary": "zx scripts/downloadBinary.mjs",
-    "postinstall": "npm run buildSubmodule || exit 0",
+    "install": "npm run buildSubmodule || exit 0",
     "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },
   "peerDependencies": {

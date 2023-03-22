@@ -11,7 +11,6 @@ import path from 'node:path'
 import { AlpacaCppChat } from '../dist/index.js'
 
 const alpaca = new AlpacaCppChat({
-  cwd: path.join(__dirname, '../dist'),
   modelParameters: { model: path.join(__dirname, '../model/ggml-alpaca-7b-q4.bin') },
 })
 

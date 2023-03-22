@@ -16,7 +16,6 @@ const prompt = new PromptTemplate({
 })
 
 const alpaca = new AlpacaCppChat({
-  cwd: path.join(__dirname, '../dist'),
   modelParameters: { model: path.join(__dirname, '../model/ggml-alpaca-7b-q4.bin') },
   // stream output to console to view it on realtime
   streaming: true,

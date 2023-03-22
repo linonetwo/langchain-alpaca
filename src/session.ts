@@ -116,8 +116,8 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           JSON.stringify({
             doneInit: this.doneInitialization,
             control1: data.includes(readInputControlCharacter),
-            control2: data.includes(readSecondInputControlCharacter),
-            prompt: data.startsWith(item?.prompt),
+            control2: data.includes(outputStartControlCharacter) && data.includes(readSecondInputControlCharacter),
+            prompt: data.includes(item?.prompt),
             'queue[0]': item,
           })
         }\n${JSON.stringify(data)}`,
@@ -125,7 +125,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
       // this callback will be called line by line.
       // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
       if (this.doneInitialization) {
-        if (data.includes(readSecondInputControlCharacter)) {
+        if (data.includes(outputStartControlCharacter) && data.includes(readSecondInputControlCharacter)) {
           // for the second time encounter `>` (after return result)
           // this means last item in the queue is finished the execution
           this.finishItemInQueue()
@@ -145,11 +145,13 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
         if (item.doneInput) {
           // finally, we are getting the real output of LLM
 
-          // first token contains controlCharacter like `"\u001b[0mHello World!"`, need to remove it.
-          // following may contains
           // eslint-disable-next-line no-control-regex
-          const token = data.replace(/[\u0000-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
+          let token = data.replace(/[\u0000-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
           if (token) {
+            if (!item.outputStarted) {
+              // first token contains controlCharacter like `"\u001b[0mHello World!"`, need to remove it.
+              token = token.replace(/\[[\d;]*[A-Za-z]/g, '')
+            }
             // if not empty after strip control characters, inform client that outputStarted is true
             item.outputStarted = true
           }

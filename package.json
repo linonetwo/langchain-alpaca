@@ -25,6 +25,7 @@
     "lint:format": "dprint check",
     "lint:types": "tsc",
     "lint:js": "eslint .",
+    "buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
     "downloadBinary": "zx scripts/downloadBinary.mjs",
     "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },

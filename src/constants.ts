@@ -34,4 +34,5 @@ export const outputStartControlCharacter = '\u001b[0m'
 // eslint-disable-next-line unicorn/escape-case
 export const readSecondInputControlCharacter = outputStartControlCharacter + '\r\n>'
 
+// eslint-disable-next-line unicorn/prefer-module
 export const defaultBinaryPath = path.join(path.dirname(require.resolve('langchain-alpaca')), 'binary')

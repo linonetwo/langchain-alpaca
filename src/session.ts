@@ -14,7 +14,8 @@ const debug = debugLib('langchain-alpaca:session')
 
 export interface AlpacaCppChatParameters {
   /**
-   * Working directory of dist file. Default to __dirname. If you are using esm, try set this to node_modules/langchain-alpaca/dist
+   * Working directory of dist file. Default to `path.join(path.dirname(require.resolve('langchain-alpaca')), 'binary')`.
+   * If you are using esm, try set this to node_modules/langchain-alpaca/dist/binary
    */
   cwd: string
   /**

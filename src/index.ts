@@ -6,9 +6,9 @@ import { LLM } from 'langchain/llms'
 import { AlpacaCppChatParameters, AlpacaCppSession } from './session.js'
 import { escapeDoubleQuotes, escapeNewLine, getPhysicalCore } from './utils.js'
 
-export { getPhysicalCore } from './utils.js'
-export * from './session.js'
 export * from './constants.js'
+export * from './session.js'
+export { getPhysicalCore } from './utils.js'
 
 const debug = debugLib('langchain-alpaca:llm')
 

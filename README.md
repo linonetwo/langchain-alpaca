@@ -6,19 +6,27 @@ Run alpaca LLM fully locally in langchain.
 pnpm i langchain-alpaca
 ```
 
+You can store following example as `loadLLM.mjs` , run it with google/zx by `DEBUG=langchain-alpaca:* zx './loadLLM.mjs'`
+
 ```ts
-import { AlpacaCppChat } from 'langchain-alpaca'
+/* eslint-disable no-undef */
+import { AlpacaCppChat, getPhysicalCore } from 'langchain-alpaca'
 import path from 'node:path'
 
-const alpaca = new AlpacaCppChat({ modelParameters: { model: 'locationToYourModel' } })
+console.time('LoadAlpaca')
+const alpaca = new AlpacaCppChat({
+  // replace this with your local model path.
+  modelParameters: { model: '/Users/linonetwo/Desktop/model/LanguageModel/ggml-alpaca-7b-q4.bin', threads: getPhysicalCore() - 1 },
+})
 const response = await alpaca.generate(['Say "hello world"']).catch((error) => console.error(error))
+console.timeEnd('LoadAlpaca')
 
 console.log(`response`, response, JSON.stringify(response))
-// response { generations: [ [ [Object] ] ] } {"generations":[[{"text":"Hello World!"}]]}
-alpaca.closeSession() // close the node-tty session to free the memory used by alpaca.cpp. You can query alpaca as much as you want before closing it.
+// close the node-tty session to free the memory used by alpaca.cpp. You can query alpaca as much as you want before closing it.
+alpaca.closeSession()
 ```
 
-See `example/loadLLM.mjs` for a simple example, run it with `zx example/loadLLM.mjs`
+See `example/*.mjs` for more examples. Run with env `DEBUG=langchain-alpaca:*` will show internal debug details, useful when you found this LLM not responding to input.
 
 Read [doc of LangChainJS](https://hwchase17.github.io/langchainjs/docs/overview/) to learn how to build a fully localized free AI workflow for you.
 
@@ -66,8 +74,9 @@ export interface AlpacaCppModelParameters {
 
 export interface AlpacaCppChatParameters {
   /**
-   * Working directory of dist file. Default to __dirname. If you are using esm, try set this to node_modules/langchain-alpaca/dist
-   */
+   * Working directory of dist file. Default to `path.join(path.dirname(require.resolve('langchain-alpaca')), 'binary')`.
+   * If you are using esm, try set this to node_modules/langchain-alpaca/dist/binary
+   *
   cwd: string
   /**
    * Name of alpaca.cpp binary

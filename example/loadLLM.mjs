@@ -11,4 +11,5 @@ const response = await alpaca.generate(['Say "hello world"']).catch((error) => c
 console.timeEnd('LoadAlpaca')
 
 console.log(`response`, response, JSON.stringify(response))
+// close the node-tty session to free the memory used by alpaca.cpp. You can query alpaca as much as you want before closing it.
 alpaca.closeSession()

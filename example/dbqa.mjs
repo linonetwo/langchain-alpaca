@@ -5,7 +5,7 @@
 /* eslint-disable no-undef */
 import { CallbackManager } from 'langchain/callbacks'
 import { LLMChain, loadQAStuffChain } from 'langchain/chains'
-import { Document } from "langchain/document";
+import { Document } from 'langchain/document'
 import { PromptTemplate } from 'langchain/prompts'
 import path from 'node:path'
 import { AlpacaCppChat } from '../dist/index.js'
@@ -14,14 +14,14 @@ const alpaca = new AlpacaCppChat({
   modelParameters: { model: path.join(__dirname, '../model/ggml-alpaca-7b-q4.bin') },
 })
 
-const chain = loadQAStuffChain(alpaca);
+const chain = loadQAStuffChain(alpaca)
 const docs = [
-  new Document({ pageContent: "harrison went to harvard" }),
-  new Document({ pageContent: "ankush went to princeton" }),
-];
+  new Document({ pageContent: 'harrison went to harvard' }),
+  new Document({ pageContent: 'ankush went to princeton' }),
+]
 const response = await chain.call({
   input_documents: docs,
-  question: "Where did harrison go to college",
-});
+  question: 'Where did harrison go to college',
+})
 console.log(`response`, response, JSON.stringify(response))
 alpaca.closeSession()

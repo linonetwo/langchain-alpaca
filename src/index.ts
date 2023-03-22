@@ -3,9 +3,12 @@ import debugLib from 'debug'
 import { BaseLanguageModelParams } from 'langchain/dist/base_language/index.js'
 import { BaseCache } from 'langchain/dist/cache.js'
 import { LLM } from 'langchain/llms'
-import os from 'node:os'
 import { AlpacaCppChatParameters, AlpacaCppSession } from './session.js'
-import { escapeDoubleQuotes, escapeNewLine } from './utils.js'
+import { escapeDoubleQuotes, escapeNewLine, getPhysicalCore } from './utils.js'
+
+export { getPhysicalCore } from './utils.js'
+export * from './session.js'
+export * from './constants.js'
 
 const debug = debugLib('langchain-alpaca:llm')
 
@@ -63,6 +66,8 @@ export interface AlpacaCppChatLLMParameters {
   streaming: boolean
 }
 
+// DEBUG: console getPhysicalCore()
+console.log(`getPhysicalCore()`, getPhysicalCore());
 /**
  * Wrapper around binary executable that loads alpaca model
  *
@@ -74,7 +79,7 @@ export class AlpacaCppChat extends LLM {
     model: '../model/ggml-alpaca-7b-q4.bin',
     // More CPU makes it slow, don't know why.
     // https://github.com/antimatter15/alpaca.cpp/issues/61#issuecomment-1476518558
-    threads: Math.min(4, os.cpus().length),
+    threads: getPhysicalCore(),
   }
   binaryParameter?: Partial<AlpacaCppChatParameters>
 

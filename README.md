@@ -30,6 +30,12 @@ See `example/*.mjs` for more examples. Run with env `DEBUG=langchain-alpaca:*` w
 
 Read [doc of LangChainJS](https://hwchase17.github.io/langchainjs/docs/overview/) to learn how to build a fully localized free AI workflow for you.
 
+### Prebuild Binary
+
+By default, langchain-alpaca bring prebuild binry with it. But it will still try to build one when `postinstall` , which should be very fast, and produce a somehow faster version of binary. This is optional, and will fail in silence, becuase it still work with prebuild binary.
+
+If you are using windows, and want to make postinstall work, make sure download and install CMake: https://cmake.org/download/ as said in https://github.com/antimatter15/alpaca.cpp#windows-setup .
+
 ## Parameter of AlpacaCppChat
 
 ```ts

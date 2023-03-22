@@ -1,6 +1,6 @@
 {
   "name": "langchain-alpaca",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "type": "module",
   "description": "Run alpaca LLM fully locally in langchain",
   "main": "dist/index.cjs",
@@ -28,7 +28,7 @@
     "test": "vitest --threads=false",
     "runExample": "DEBUG=langchain-alpaca:* zx example/loadLLM.mjs",
     "updateSubmodule": "git submodule update --init --recursive",
-    "buildSubmodule": "zx scripts/buildSubmodule.mjs && cp -r ./binary ./dist",
+    "buildSubmodule": "cross-env npm_config_yes=true npx zx scripts/buildSubmodule.mjs && cp -r ./binary ./dist",
     "format": "dprint fmt",
     "lint": "run-p lint:*",
     "lint:format": "dprint check",
@@ -42,6 +42,7 @@
     "langchain": "^0.0.38"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "debug": "^4.3.4",
     "node-pty": "^0.10.1"
   },

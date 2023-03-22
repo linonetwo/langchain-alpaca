@@ -20,8 +20,6 @@ export const redirectingStderrOutput = os.platform() === 'win32' ? '2>&1 > $null
  */
 // eslint-disable-next-line unicorn/escape-case
 export const readInputControlCharacter = '\u001b[33m'
-// eslint-disable-next-line unicorn/escape-case
-export const outputStartControlCharacter = '\u001b'
 /**
  * It prints this after the answer, and wait for second user input
  * "\u001b[0m\r\n> \u001b[1m\u001b[32m"
@@ -32,9 +30,11 @@ export const outputStartControlCharacter = '\u001b'
  * So have to check `\r\n>` too.
  * 
  * In Windows, it is "\r" "\n>\u001b[1C" "\u001b[1mu001b[92m" , different to macOS
+ * 
+ * Might also be "\r" "\u001b[1m\u001b[92m\n\u001b[m>\u001b[1C"
  */
 // eslint-disable-next-line unicorn/escape-case
-export const readSecondInputControlCharacter = '\n>'
+export const readSecondInputControlCharacters = ['\u001b', '\n','>']
 
 // eslint-disable-next-line unicorn/prefer-module
 export const defaultBinaryPath = path.join(path.dirname(require.resolve('langchain-alpaca')), 'binary')

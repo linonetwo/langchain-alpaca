@@ -4,9 +4,8 @@ import os from 'node:os'
 import type { Observer } from 'rxjs'
 import {
   defaultBinaryPath,
-  outputStartControlCharacter,
   readInputControlCharacter,
-  readSecondInputControlCharacter,
+  readSecondInputControlCharacters,
   redirectingStderrOutput,
 } from './constants.js'
 
@@ -117,7 +116,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           JSON.stringify({
             doneInit: this.doneInitialization,
             control1: data.includes(readInputControlCharacter),
-            control2: data.includes(outputStartControlCharacter) && data.includes(readSecondInputControlCharacter),
+            control2: readSecondInputControlCharacters.every(char => data.includes(char)),
             prompt: data.includes(item?.prompt),
             'queue[0]': item,
           })
@@ -127,7 +126,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
         // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
         if (this.doneInitialization) {
         if (item === undefined) return
-        if (item.outputStarted && data.includes(outputStartControlCharacter) && data.includes(readSecondInputControlCharacter)) {
+        if (item.outputStarted && readSecondInputControlCharacters.every(char => data.includes(char))) {
           // for the second time encounter `>` (after return result)
           // this means last item in the queue is finished the execution
           this.finishItemInQueue()

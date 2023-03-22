@@ -1,4 +1,5 @@
 import os from 'node:os'
+import path from 'node:path'
 
 /**
  * Ignore diagnostic outputs
@@ -32,3 +33,5 @@ export const outputStartControlCharacter = '\u001b[0m'
  */
 // eslint-disable-next-line unicorn/escape-case
 export const readSecondInputControlCharacter = outputStartControlCharacter + '\r\n>'
+
+export const defaultBinaryPath = path.join(path.dirname(require.resolve('langchain-alpaca')), 'binary')

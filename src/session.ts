@@ -3,6 +3,7 @@ import pty from 'node-pty'
 import os from 'node:os'
 import type { Observer } from 'rxjs'
 import {
+  defaultBinaryPath,
   outputStartControlCharacter,
   readInputControlCharacter,
   readSecondInputControlCharacter,
@@ -43,11 +44,11 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
    * Working directory of dist file. Default to `.` . If you are using esm, try set this to node_modules/langchain-alpaca/dist
    */
   // eslint-disable-next-line unicorn/prefer-module
-  cwd = '.'
+  cwd = defaultBinaryPath
   /**
    * Name of alpaca.cpp binary
    */
-  cmd = os.platform() === 'win32' ? './binary/chat.exe' : (os.platform() === 'darwin' ? './binary/chat_mac' : './binary/chat')
+  cmd = os.platform() === 'win32' ? './chat.exe' : (os.platform() === 'darwin' ? './chat_mac' : './chat')
   shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash'
 
   ptyProcess: pty.IPty

@@ -1,6 +1,6 @@
 {
   "name": "langchain-alpaca",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "type": "module",
   "description": "Run alpaca LLM fully locally in langchain",
   "main": "dist/index.cjs",
@@ -13,7 +13,15 @@
   },
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "scripts",
+    ".gitmodules",
+    "README.md",
+    "alpaca.cpp/*.cpp",
+    "alpaca.cpp/*.h",
+    "alpaca.cpp/*.c",
+    "alpaca.cpp/Makefile",
+    "alpaca.cpp/CMakeLists.txt"
   ],
   "scripts": {
     "build": "tsup && cp -r ./binary ./dist",
@@ -25,9 +33,10 @@
     "lint:format": "dprint check",
     "lint:types": "tsc",
     "lint:js": "eslint .",
-    "buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs && cp -r ./binary ./dist",
+    "updateSubmodule": "git submodule update --init --recursive",
+    "buildSubmodule": "zx scripts/buildSubmodule.mjs && cp -r ./binary ./dist",
     "downloadBinary": "zx scripts/downloadBinary.mjs",
-    "install": "npm run buildSubmodule || exit 0",
+    "postinstall": "npm run buildSubmodule || exit 0",
     "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },
   "peerDependencies": {

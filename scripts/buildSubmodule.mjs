@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const binaryFolder = path.join(__dirname, '..', 'binary')
 
-cd('../alpaca.cpp')
+cd(`${__dirname}/../alpaca.cpp`)
 let distPath = path.join(binaryFolder, 'chat.exe')
 if (os.platform() === 'win32') {
   // https://github.com/antimatter15/alpaca.cpp#windows-setup
@@ -12,7 +12,7 @@ if (os.platform() === 'win32') {
 } else if (os.platform() === 'darwin') {
   await $`make chat_mac`
   distPath = path.join(binaryFolder, 'chat_mac')
-  await fs.copy('./chat', distPath)
+  await fs.copy('./chat_mac', distPath)
 } else {
   await $`make`
   distPath = path.join(binaryFolder, 'chat')

@@ -19,7 +19,7 @@ export const redirectingStderrOutput = os.platform() === 'win32' ? '2>&1 > $null
     data.startsWith('\u001b[1m\u001b[32m') true
  */
 // eslint-disable-next-line unicorn/escape-case
-export const readInputControlCharacter = '\u001b[33m'
+// export const readInputControlCharacter = '\u001b[33m'
 /**
  * It prints this after the answer, and wait for second user input
  * "\u001b[0m\r\n> \u001b[1m\u001b[32m"
@@ -32,6 +32,10 @@ export const readInputControlCharacter = '\u001b[33m'
  * In Windows, it is "\r" "\n>\u001b[1C" "\u001b[1mu001b[92m" , different to macOS
  * 
  * Might also be "\r" "\u001b[1m\u001b[92m\n\u001b[m>\u001b[1C"
+ * 
+ * But might also be triggered by
+ * 
+ *  "PS E:\\repo\\langchain-alpaca\\dist\\binary> ./chat.exe --model \"e:\\repo\\langchain-a\r\nlpaca\\model\\ggml-alpaca-13b-q4.bin\"  --threads 6 2>&1 > $null\u001b[K\r\n"
  */
 // eslint-disable-next-line unicorn/escape-case
 export const readSecondInputControlCharacters = ['\u001b', '\n','>']

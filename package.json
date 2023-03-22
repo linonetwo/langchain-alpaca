@@ -27,6 +27,7 @@
     "lint:js": "eslint .",
     "buildSubmodule": "git submodule update --init --recursive && zx scripts/buildSubmodule.mjs",
     "downloadBinary": "zx scripts/downloadBinary.mjs",
+    "postinstall": "npm run buildSubmodule || exit 0",
     "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },
   "peerDependencies": {

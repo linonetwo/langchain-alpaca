@@ -8,14 +8,13 @@ if (os.platform() === 'win32') {
   await $`cmake .`
   await $`cmake --build . --config Release`
   await fs.copy('./chat.exe', distPath)
+} else if (os.platform() === 'darwin') {
+  await $`make chat_mac`
+  distPath = path.join(binaryFolder, 'chat_mac')
+  await fs.copy('./chat', distPath)
 } else {
-  await $`make chat`
-  if (os.platform() === 'darwin') {
-    distPath = path.join(binaryFolder, 'chat_mac')
-    await fs.copy('./chat', distPath)
-  } else {
-    distPath = path.join(binaryFolder, 'chat')
-    await fs.copy('./chat', distPath)
-  }
+  await $`make`
+  distPath = path.join(binaryFolder, 'chat')
+  await fs.copy('./chat', distPath)
 }
 echo(`copied to ${distPath}`)

@@ -32,6 +32,10 @@ export interface QueueItem extends Observer<{ token: string; item: QueueItem }> 
    */
   doneInput: boolean
   /**
+   * Shell will echo back once, should ignore this message
+   */
+  doneEcho: boolean
+  /**
    * Does output of this item started, or we are just waiting for LLM to respond.
    */
   outputStarted: boolean
@@ -116,7 +120,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
             prompt: data.startsWith(item?.prompt),
             'queue[0]': item,
           })
-        }\n${data}`,
+        }\n${JSON.stringify(data)}`,
       )
       // this callback will be called line by line.
       // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
@@ -129,9 +133,9 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           return
         }
         if (item === undefined) return
-        if (!item.doneInput && data.startsWith(item.prompt)) {
+        if (!item.doneEcho && data.includes(item.prompt)) {
           // shell will echo the input, we have to wait after the echo to receive the real input.
-          item.doneInput = true
+          item.doneEcho = true
           return
         }
         if (!item.doneInput) {
@@ -142,7 +146,13 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
           // finally, we are getting the real output of LLM
 
           // first token contains controlCharacter like `"\u001b[0mHello World!"`, need to remove it.
-          const token = item.outputStarted ? data : data.replace(outputStartControlCharacter, '')
+          // following may contains
+          // eslint-disable-next-line no-control-regex
+          const token = data.replace(/[\u0000-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
+          if (token) {
+            // if not empty after strip control characters, inform client that outputStarted is true
+            item.outputStarted = true
+          }
           // give item's callback the latest output token, and current state in the queue item
           item.next({ token, item })
           return
@@ -180,6 +190,8 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
     if (command === undefined) return
     if (command.doneInput) return
     // pass item's prompt to LLM
+    debug(`processQueue() write prompt\n${command.prompt}`)
+    command.doneInput = true
     this.ptyProcess.write(`${command.prompt} \r`)
   }
 
@@ -200,6 +212,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
     this.queue.push({
       prompt,
       doneInput: false,
+      doneEcho: false,
       outputStarted: false,
       ...observer,
     })

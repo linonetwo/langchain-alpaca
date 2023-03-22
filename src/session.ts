@@ -10,6 +10,8 @@ import {
 } from './constants.js'
 
 const debug = debugLib('langchain-alpaca:session')
+const debugData = debugLib('langchain-alpaca:data')
+const debugState = debugLib('langchain-alpaca:state')
 
 export interface AlpacaCppChatParameters {
   /**
@@ -111,17 +113,18 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
     this.ptyProcess.onData((data) => {
       const item = this.queue[0]
       // prevent JSON.stringify execution if not in debug mode
-      process.env.DEBUG?.includes('langchain-alpaca') && debug(
+      process.env.DEBUG?.includes('langchain-alpaca') && debugState(
         `onData ${
           JSON.stringify({
             doneInit: this.doneInitialization,
             control1: data.includes(readInputControlCharacter),
             control2: readSecondInputControlCharacters.every(char => data.includes(char)),
             prompt: data.includes(item?.prompt),
-            'queue[0]': item,
+            'queue[0]': { ...item, prompt: '' },
           })
-        }\n${JSON.stringify(data)}`,
+        }`,
         )
+        debugData(JSON.stringify(data))
         // this callback will be called line by line.
         // Some lines contains system out, some contains user input's echo by shell, some will be control characters.
         if (this.doneInitialization) {
@@ -211,7 +214,7 @@ export class AlpacaCppSession implements AlpacaCppChatParameters {
    * @param prompt Text input for the Chat LLM
    */
   execute(prompt: string, observer: Observer<{ token: string; item: QueueItem }>) {
-    debug(`execute(${prompt}) this.queue.length: ${this.queue.length}`)
+    debug(`execute(${JSON.stringify(prompt)}) this.queue.length: ${this.queue.length}`)
     const noWaitingTask = this.queue.length === 0
     this.queue.push({
       prompt,

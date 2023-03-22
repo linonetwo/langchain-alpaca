@@ -3,10 +3,8 @@
  * @url https://hwchase17.github.io/langchainjs/docs/modules/chains/llm_chain
  */
 /* eslint-disable no-undef */
-import { CallbackManager } from 'langchain/callbacks'
-import { LLMChain, loadQAStuffChain } from 'langchain/chains'
+import { loadQAStuffChain } from 'langchain/chains'
 import { Document } from 'langchain/document'
-import { PromptTemplate } from 'langchain/prompts'
 import path from 'node:path'
 import { AlpacaCppChat } from '../dist/index.js'
 
@@ -23,5 +21,9 @@ const response = await chain.call({
   input_documents: docs,
   question: 'Where did harrison go to college',
 })
-console.log(`response`, response, JSON.stringify(response))
+echo(JSON.stringify(response))
 alpaca.closeSession()
+if (os.platform() === 'win32') {
+  // it seems not quit only on windows.
+  process.exit(0)
+}

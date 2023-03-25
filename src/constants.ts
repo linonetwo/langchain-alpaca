@@ -1,6 +1,6 @@
 import os from 'node:os'
 import path from 'node:path'
-import { URL } from 'url'
+import { URL } from 'node:url'
 
 /**
  * Ignore diagnostic outputs
@@ -41,4 +41,4 @@ export const redirectingStderrOutput = os.platform() === 'win32' ? '2>&1 > $null
 // eslint-disable-next-line unicorn/escape-case
 export const readSecondInputControlCharacters = ['\u001b', '\n','>']
 
-export const defaultBinaryPath = new URL('./binary/', import.meta.url).pathname.substring(1);
+export const defaultBinaryPath = `/${new URL('binary/', import.meta.url).pathname.slice(1)}`;

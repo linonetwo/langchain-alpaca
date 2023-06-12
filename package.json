@@ -44,7 +44,7 @@
   "dependencies": {
     "cross-env": "^7.0.3",
     "debug": "^4.3.4",
-    "node-pty": "^0.10.1"
+    "node-pty": "^1.0.0"
   },
   "devDependencies": {
     "@sachinraja/eslint-config": "0.2.0",

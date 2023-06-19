@@ -10,7 +10,7 @@ specifiers:
   eslint: 8.36.0
   langchain: ^0.0.38
   node-gyp: ^9.3.1
-  node-pty: ^0.10.1
+  node-pty: ^1.0.0
   npm-run-all: 4.1.5
   rxjs: ^7.8.0
   tsup: ^6.7.0
@@ -22,7 +22,7 @@ specifiers:
 dependencies:
   cross-env: 7.0.3
   debug: 4.3.4
-  node-pty: 0.10.1
+  node-pty: 1.0.0
 
 devDependencies:
   '@sachinraja/eslint-config': 0.2.0_j4766f7ecgqbon3u7zlxn5zszu
@@ -2423,8 +2423,8 @@ packages:
       - supports-color
     dev: true
 
-  /node-pty/0.10.1:
-    resolution: {integrity: sha512-JTdtUS0Im/yRsWJSx7yiW9rtpfmxqxolrtnyKwPLI+6XqTAPW/O2MjS8FYL4I5TsMbH2lVgDb2VMjp+9LoQGNg==}
+  /node-pty/1.0.0:
+    resolution: {integrity: sha512-wtBMWWS7dFZm/VgqElrTvtfMq4GzJ6+edFI0Y0zyzygUSZMgZdraDUMUhCIvkjhJjme15qWmbyJbtAx4ot4uZA==}
     requiresBuild: true
     dependencies:
       nan: 2.17.0

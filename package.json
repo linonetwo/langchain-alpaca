@@ -39,7 +39,7 @@
     "prepublishOnly": "pnpm downloadBinary && pnpm build"
   },
   "peerDependencies": {
-    "langchain": "^0.0.38"
+    "langchain": "^0.0.38 || ^0.0.120"
   },
   "dependencies": {
     "cross-env": "^7.0.3",
